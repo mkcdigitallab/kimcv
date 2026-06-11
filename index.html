@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KimCV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #F5F8FD; color: #0F1E3C; min-height: 100vh; }
+    .serif { font-family: 'Playfair Display', serif; }
+
+    /* ── UTILITAIRES ── */
+    .btn-dark  { background:#1A3A6B;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px; }
+    .btn-dark:hover { background:#14305a; }
+    .action-btn { background:#F5F8FD;border:1px solid #DDE5F2;border-radius:7px;padding:6px 12px;font-size:12px;color:#4B5E7A;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500; }
+    .action-btn:hover { background:#EBF1FB;color:#1A3A6B;border-color:#C2D4F5; }
+    .nav-item  { display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:#6B7E9A;border:none;background:transparent;width:100%;text-align:left; }
+    .nav-item.active { background:#EBF1FB;color:#1A3A6B;font-weight:600; }
+    .nav-item:hover { background:#F5F8FD; }
+    .card { background:#fff;border:1px solid #DDE5F2;border-radius:14px;padding:20px; }
+    .stat-card { background:#fff;border:1px solid #DDE5F2;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px; }
+    .cv-row { background:#fff;border:1px solid #DDE5F2;border-radius:12px;padding:16px;display:flex;align-items:center;gap:16px;transition:box-shadow 0.2s;cursor:pointer; }
+    .cv-row:hover { box-shadow:0 4px 16px rgba(26,58,107,0.1); }
+    .badge-pro  { background:#1A3A6B;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px; }
+    .badge-free { background:#E5EAF2;color:#5A6E8A;font-size:10px;padding:2px 8px;border-radius:4px; }
+    .score-good { color:#2D9B6F; }
+    .score-mid  { color:#E8923A; }
+    .score-low  { color:#D94F4F; }
+
+    /* ── AUTH PAGES ── */
+    .auth-wrap { display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f4f7fc; }
+    .auth-card { width:440px;background:#fff;padding:36px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.07);border:1px solid #DDE5F2; }
+    .auth-logo  { text-align:center;margin-bottom:10px; }
+    .auth-title { text-align:center;margin-bottom:8px;color:#1A3A6B; }
+    .auth-sub   { text-align:center;color:#1a3a6b90;font-size:14px;margin-bottom:24px; }
+    .auth-label { display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#1A3A6B; }
+    .auth-input { width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;outline:none;color:#1A3A6B;transition:border-color .2s; }
+    .auth-input:focus { border-color:#2563eb; }
+    .auth-group { margin-bottom:15px; }
+    .auth-row   { display:flex;gap:10px; }
+    .auth-row .auth-group { flex:1; }
+    .pw-row     { display:flex;gap:8px; }
+    .pw-row input { flex:1; }
+    .eye-btn    { padding:12px;border:1px solid #ddd;background:#F5F8FD;border-radius:8px;cursor:pointer;font-size:14px; }
+    .eye-btn:hover { background:#EBF1FB; }
+    .auth-meta  { display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-size:13px; }
+    .auth-meta label { display:flex;align-items:center;gap:6px;cursor:pointer;color:#1A3A6B; }
+    .auth-meta a { color:#2563eb;text-decoration:none;font-weight:500; }
+    .auth-meta a:hover { text-decoration:underline; }
+    .auth-btn   { width:100%;border:none;background:#2563eb;color:#fff;padding:13px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;transition:background .2s; }
+    .auth-btn:hover { background:#1d4ed8; }
+    .social-row { margin-top:18px;display:flex;gap:10px; }
+    .social-btn { flex:1;padding:11px;border:1px solid #ddd;background:#fff;cursor:pointer;border-radius:8px;font-size:13px;font-weight:500;color:#1A3A6B;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s; }
+    .social-btn:hover { background:#F5F8FD; }
+    .auth-footer { text-align:center;margin-top:18px;font-size:14px;color:#1A3A6B; }
+    .auth-footer a { color:#2563eb;font-weight:600;text-decoration:none;cursor:pointer; }
+    .auth-footer a:hover { text-decoration:underline; }
+    .checkbox-row { display:flex;gap:8px;align-items:center;margin-bottom:18px;font-size:13px;color:#1A3A6B; }
+    .checkbox-row input { width:auto; }
+    .msg-error   { color:red;font-size:13px;text-align:center;margin-bottom:10px; }
+    .msg-success { color:#2D9B6F;font-size:13px;text-align:center;margin-bottom:10px; }
+
+    /* ── DASHBOARD LAYOUT ── */
+    .dash-layout { display:grid;grid-template-columns:220px 1fr;min-height:100vh; }
+    .sidebar { background:#fff;border-right:1px solid #E5EAF2;padding:20px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow-y:auto; }
+    .main-content { padding:28px 32px;overflow-y:auto; }
+
+    /* ── LOGO SVG ── */
+    .logo-svg { display:inline-block; }
+  </style>
+</head>
+<body>
+
+<!-- Conteneur SPA unique -->
+<div id="app"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DONNÉES (normalement chargées depuis data.json)
+//  Pour fonctionner sans serveur, les données sont
+//  embarquées ici — remplacez par fetch('data.json')
+//  si vous avez un serveur local.
+// ══════════════════════════════════════════════
+const DATA_URL = 'data.json';
+
+let appData = null;     // données JSON chargées
+let currentUser = null; // utilisateur connecté en session
+
+// ── ICÔNES réutilisables ──
+const ICON = {
+  logo: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="-1 -1 22 20">
+    <path d="M-1 -1h22v22H-1z" fill="none"/>
+    <g fill="#1a3a6b">
+      <path d="M7.8 6.35c.56 0 1.01-.45 1.01-1.01S8.36 4.33 7.8 4.33s-1.01.45-1.01 1.01s.45 1.01 1.01 1.01"/>
+      <path fill-rule="evenodd" d="M9.83 8.55c0-1.08-.91-1.86-2.03-1.86s-2.03.78-2.03 1.86v.51c0 .09.04.18.1.24s.15.1.24.1h3.38c.09 0 .18-.04.24-.1s.1-.15.1-.24zM5.75 11.5a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/>
+      <path fill-rule="evenodd" d="M2.5 2.5c0-1.102.898-2 2-2h6.69c.562 0 1.092.238 1.465.631l.006.007l4.312 4.702c.359.383.527.884.527 1.36v10.3c0 1.102-.898 2-2 2h-11c-1.102 0-2-.898-2-2zm8.689 0H4.5v15h11V7.192l-4.296-4.685l-.003-.001z" clip-rule="evenodd"/>
+      <path fill-rule="evenodd" d="M11.19.5a1 1 0 0 1 1 1v4.7h4.31a1 1 0 1 1 0 2h-5.31a1 1 0 0 1-1-1V1.5a1 1 0 0 1 1-1" clip-rule="evenodd"/>
+    </g>
+  </svg>`,
+  google: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <g fill="none" fill-rule="evenodd" clip-rule="evenodd">
+      <path fill="#f44336" d="M7.209 1.061c.725-.081 1.154-.081 1.933 0a6.57 6.57 0 0 1 3.65 1.82l-1.986 1.93q-1.876-1.59-4.188-.734q-1.696.78-2.362 2.528L2.108 4.947q1.683-3.245 5.26-3.86" opacity="0.987"/>
+      <path fill="#ffc107" d="M1.946 4.92a78 78 0 0 0 2.148 1.658A7.6 7.6 0 0 0 4.04 7.99q.037.678.215 1.331L2 11.116Q.527 8.038 1.946 4.92" opacity="0.997"/>
+      <path fill="#448aff" d="M12.685 13.29a26 26 0 0 0-2.202-1.74q1.15-.812 1.396-2.228H8.122V6.713q3.25-.027 6.497.055q.616 3.345-1.423 6.032a7 7 0 0 1-.51.49" opacity="0.999"/>
+      <path fill="#43a047" d="M4.255 9.322q1.23 3.057 4.51 2.854a3.94 3.94 0 0 0 1.718-.626q1.148.812 2.202 1.74a6.62 6.62 0 0 1-4.027 1.684a6.4 6.4 0 0 1-1.02 0Q3.82 14.524 2 11.116z" opacity="0.993"/>
+    </g>
+  </svg>`,
+  github: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+    <path fill="#808080" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/>
+  </svg>`
+};
+
+// ══════════════════════════════════════════════
+//  ROUTEUR SPA
+// ══════════════════════════════════════════════
+function navigate(page) {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  if (page === 'connexion')   app.innerHTML = renderConnexion();
+  else if (page === 'inscription') app.innerHTML = renderInscription();
+  else if (page === 'bord')   app.innerHTML = renderBord();
+
+  attachEvents(page);
+}
+
+// ══════════════════════════════════════════════
+//  PAGE : CONNEXION
+// ══════════════════════════════════════════════
+function renderConnexion() {
+  return `
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">${ICON.logo}</div>
+      <h1 class="auth-title serif">Connexion</h1>
+      <p class="auth-sub">Connectez-vous à votre espace KimCV</p>
+      <div id="auth-msg"></div>
+      <form id="loginForm" autocomplete="off">
+        <div class="auth-group">
+          <label class="auth-label">Email</label>
+          <input type="email" id="login-email" class="auth-input" placeholder="email@example.com" required>
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Mot de passe</label>
+          <div class="pw-row">
+            <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required>
+            <button type="button" class="eye-btn" id="togglePw">👁</button>
+          </div>
+        </div>
+        <div class="auth-meta">
+          <label><input type="checkbox" id="remember"> Se souvenir de moi</label>
+          <a href="#">Mot de passe oublié ?</a>
+        </div>
+        <button type="submit" class="auth-btn">Se connecter</button>
+      </form>
+      <div class="social-row">
+        <button class="social-btn">${ICON.google} Google</button>
+        <button class="social-btn">${ICON.github} GitHub</button>
+      </div>
+      <div class="auth-footer">
+        Pas encore de compte ? <a onclick="navigate('inscription')">Créer un compte</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  PAGE : INSCRIPTION
+// ══════════════════════════════════════════════
+function renderInscription() {
+  return `
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">${ICON.logo}</div>
+      <h1 class="auth-title serif">Créer un compte</h1>
+      <p class="auth-sub">Rejoignez KimCV gratuitement</p>
+      <div id="auth-msg"></div>
+      <form id="registerForm" autocomplete="off">
+        <div class="auth-row">
+          <div class="auth-group">
+            <label class="auth-label">Prénom</label>
+            <input type="text" id="reg-prenom" class="auth-input" required>
+          </div>
+          <div class="auth-group">
+            <label class="auth-label">Nom</label>
+            <input type="text" id="reg-nom" class="auth-input" required>
+          </div>
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Email</label>
+          <input type="email" id="reg-email" class="auth-input" required>
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Mot de passe</label>
+          <input type="password" id="reg-password" class="auth-input" required>
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Confirmer le mot de passe</label>
+          <input type="password" id="reg-confirm" class="auth-input" required>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">J'accepte les <a href="#" style="color:#2563eb;">conditions d'utilisation</a></label>
+        </div>
+        <button type="submit" class="auth-btn">Créer mon compte</button>
+      </form>
+      <div class="auth-footer">
+        Déjà inscrit ? <a onclick="navigate('connexion')">Se connecter</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  PAGE : TABLEAU DE BORD
+// ══════════════════════════════════════════════
+function renderBord() {
+  if (!appData || !currentUser) return '<p style="padding:40px;color:red;">Erreur : données non chargées.</p>';
+
+  const u  = currentUser;
+  const s  = appData.stats;
+  const initiales = (u.prenom[0] + u.nom[0]).toUpperCase();
+
+  // Stat cards
+  const statCards = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
+      ${statCard('CV créés',        s.cv_crees,          `${s.cv_gratuits} gratuit · ${s.cv_pro} pro`, 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z')}
+      ${statCard('Score moyen',     s.score_moyen,       '↑ ' + s.score_evolution, 'M18 20v-10M12 20v-16M6 20v-6', '#2D9B6F', 'score-good')}
+      ${statCard('Lettres générées',s.lettres_generees,  'Via IA', 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z')}
+      ${statCard('PDF exportés',    s.pdf_exportes,      'Cette semaine', 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4')}
+    </div>`;
+
+  // CV rows
+  const cvRows = appData.cv.map(cv => {
+    const scoreColor = cv.couleur_score === 'good' ? '#2D9B6F' : cv.couleur_score === 'mid' ? '#E8923A' : '#D94F4F';
+    const scoreClass = 'score-' + cv.couleur_score;
+    const badgeClass = cv.plan === 'pro' ? 'badge-pro' : 'badge-free';
+    const barW = cv.score_ats + '%';
+    return `
+      <div class="cv-row">
+        <div style="width:52px;height:68px;background:#F0F4FB;border-radius:4px;border:1px solid #DDE5F2;padding:6px;flex-shrink:0;">
+          <div style="background:#1A3A6B;height:4px;border-radius:1px;margin-bottom:4px;"></div>
+          <div style="background:#CDD6E8;height:2px;border-radius:1px;margin-bottom:3px;"></div>
+          <div style="background:#CDD6E8;height:2px;border-radius:1px;width:70%;margin-bottom:3px;"></div>
+          <div style="background:#CDD6E8;height:2px;border-radius:1px;width:80%;"></div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+            <p style="font-size:14px;font-weight:600;color:#0F1E3C;">${cv.titre}</p>
+            <span class="${badgeClass}">${cv.template}</span>
+          </div>
+          <p style="font-size:12px;color:#9AAABE;margin-bottom:8px;">Modifié ${cv.modifie} · Template ${cv.template}</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:11px;color:#6B7E9A;">Score ATS</span>
+            <div style="flex:1;max-width:120px;background:#E5EAF2;height:5px;border-radius:3px;">
+              <div style="width:${barW};height:100%;background:${scoreColor};border-radius:3px;"></div>
+            </div>
+            <span style="font-size:12px;font-weight:700;" class="${scoreClass}">${cv.score_ats}/100</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="action-btn">Modifier</button>
+          <button class="action-btn">PDF</button>
+          <button class="action-btn">Dupliquer</button>
+          <button style="background:#FEF2F2;border:1px solid #FECACA;border-radius:7px;padding:6px 10px;font-size:12px;color:#D94F4F;cursor:pointer;" title="Supprimer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#D94F4F" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M9,6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Activités
+  const actIcons = {
+    edit:   { bg:'#EBF1FB', stroke:'#1A3A6B', d:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z' },
+    export: { bg:'#E8F5EF', stroke:'#2D9B6F', d:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3' },
+    ia:     { bg:'#EBF1FB', stroke:'#1A3A6B', d:'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z' },
+    create: { bg:'#F5F8FD', stroke:'#9AAABE', d:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' }
+  };
+
+  const activiteRows = appData.activites.map(a => {
+    const ic = actIcons[a.type] || actIcons.create;
+    return `
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:${ic.bg};border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${ic.stroke}" stroke-width="2"><path d="${ic.d}"/></svg>
+        </div>
+        <div>
+          <p style="font-size:12px;font-weight:600;color:#0F1E3C;">${a.texte}</p>
+          <p style="font-size:11px;color:#9AAABE;">${a.date}</p>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Lettres
+  const lettreRows = appData.lettres.map(l => `
+    <div style="background:#F5F8FD;border:1px solid #DDE5F2;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:#EBF1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:13px;font-weight:600;color:#0F1E3C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.titre}</p>
+        <p style="font-size:11px;color:#9AAABE;">${l.source} · ${l.date}</p>
+      </div>
+      <div style="display:flex;gap:5px;">
+        <button class="action-btn" style="padding:5px 10px;font-size:11px;">Voir</button>
+        <button class="action-btn" style="padding:5px 10px;font-size:11px;">PDF</button>
+      </div>
+    </div>`).join('');
+
+  return `
+  <div class="dash-layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div style="display:flex;align-items:center;gap:8px;padding:0 8px;margin-bottom:20px;">
+        <div style="width:30px;height:30px;background:#1A3A6B;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="serif" style="font-size:16px;font-weight:700;color:#1A3A6B;">KimCV</span>
+      </div>
+
+      <!-- USER PILL -->
+      <div style="background:#F5F8FD;border-radius:10px;padding:12px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#1A3A6B;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font-size:13px;font-weight:700;color:#fff;">${initiales}</span>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <p style="font-size:13px;font-weight:600;color:#0F1E3C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${u.prenom} ${u.nom}</p>
+          <span style="font-size:10px;background:#E5EAF2;color:#5A6E8A;padding:1px 7px;border-radius:3px;font-weight:500;">${u.plan}</span>
+        </div>
+      </div>
+
+      <p style="font-size:10px;font-weight:700;color:#9AAABE;letter-spacing:2px;text-transform:uppercase;padding:0 8px;margin-bottom:6px;">Menu</p>
+
+      <button class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1A3A6B"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Tableau de bord
+      </button>
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Mes CV
+        <span style="margin-left:auto;background:#EBF1FB;color:#1A3A6B;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;">${appData.cv.length}</span>
+      </button>
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Mes lettres
+        <span style="margin-left:auto;background:#EBF1FB;color:#1A3A6B;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;">${appData.lettres.length}</span>
+      </button>
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Templates
+      </button>
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Statistiques
+      </button>
+
+      <div style="border-top:1px solid #E5EAF2;margin:12px 0;"></div>
+
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Mon profil
+      </button>
+      <button class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7E9A" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Paramètres
+      </button>
+
+      <!-- DÉCONNEXION -->
+      <button class="nav-item" id="btn-logout" style="margin-top:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D94F4F" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span style="color:#D94F4F;">Déconnexion</span>
+      </button>
+
+      <!-- UPGRADE -->
+      <div style="margin-top:auto;background:linear-gradient(135deg,#1A3A6B,#2563EB);border-radius:12px;padding:16px;">
+        <p style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">Passez à Pro</p>
+        <p style="font-size:11px;color:#B0C4DE;margin-bottom:12px;line-height:1.5;">Templates premium, IA illimitée, PDF sans filigrane.</p>
+        <button style="background:#fff;color:#1A3A6B;border:none;padding:8px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;width:100%;">Voir les offres →</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+        <div>
+          <h1 class="serif" style="font-size:26px;font-weight:700;color:#0F1E3C;margin-bottom:4px;">Bonjour, ${u.prenom} 👋</h1>
+          <p style="font-size:13px;color:#6B7E9A;">Voici un aperçu de votre activité KimCV.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="background:#fff;border:1px solid #DDE5F2;border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AAABE" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span style="font-size:13px;color:#9AAABE;">Rechercher...</span>
+          </div>
+          <button class="btn-dark">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouveau CV
+          </button>
+        </div>
+      </div>
+
+      ${statCards}
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px;">
+        <!-- MES CV -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <h2 class="serif" style="font-size:18px;font-weight:700;color:#0F1E3C;">Mes CV</h2>
+            <div style="display:flex;gap:8px;">
+              <button class="action-btn">Tout voir</button>
+              <button class="btn-dark" style="padding:8px 14px;font-size:12px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Nouveau
+              </button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            ${cvRows}
+            <div style="border:1.5px dashed #C2D4F5;border-radius:12px;padding:16px;text-align:center;cursor:pointer;background:#F8FAFD;">
+              <p style="font-size:13px;color:#9AAABE;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AAABE" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Créer un nouveau CV
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLONNE DROITE -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <h2 class="serif" style="font-size:16px;font-weight:700;color:#0F1E3C;">Mes Lettres</h2>
+              <button class="action-btn">+ Nouvelle</button>
+            </div>
+            ${lettreRows}
+          </div>
+          <div class="card">
+            <h2 class="serif" style="font-size:16px;font-weight:700;color:#0F1E3C;margin-bottom:14px;">Activité récente</h2>
+            <div style="display:flex;flex-direction:column;gap:12px;">${activiteRows}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Composant stat-card ──
+function statCard(label, value, sub, iconD, valueColor = '#1A3A6B', valueClass = '') {
+  return `
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:#6B7E9A;font-weight:500;">${label}</span>
+        <div style="width:32px;height:32px;background:#EBF1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2"><path d="${iconD}"/></svg>
+        </div>
+      </div>
+      <p class="serif ${valueClass}" style="font-size:32px;font-weight:700;color:${valueColor};">${value}</p>
+      <p style="font-size:11px;color:#9AAABE;">${sub}</p>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  ATTACHER LES ÉVÉNEMENTS après rendu
+// ══════════════════════════════════════════════
+function attachEvents(page) {
+  if (page === 'connexion') {
+    // Œil toggle
+    document.getElementById('togglePw').addEventListener('click', function() {
+      const pw = document.getElementById('login-password');
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+      this.textContent = pw.type === 'password' ? '👁' : '🙈';
+    });
+
+    // Soumission connexion
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const mdp   = document.getElementById('login-password').value;
+      const msg   = document.getElementById('auth-msg');
+
+      const compte = appData.comptes_demo.find(c => c.email === email && c.motdepasse === mdp);
+      if (compte) {
+        currentUser = {
+          prenom: compte.prenom,
+          nom: compte.nom,
+          email: compte.email,
+          plan: appData.utilisateur.plan
+        };
+        navigate('bord');
+      } else {
+        msg.innerHTML = '<p class="msg-error">Email ou mot de passe incorrect.</p>';
+      }
+    });
+  }
+
+  if (page === 'inscription') {
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const prenom  = document.getElementById('reg-prenom').value.trim();
+      const nom     = document.getElementById('reg-nom').value.trim();
+      const email   = document.getElementById('reg-email').value.trim();
+      const pw      = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+      const msg     = document.getElementById('auth-msg');
+
+      if (pw !== confirm) {
+        msg.innerHTML = '<p class="msg-error">Les mots de passe ne correspondent pas.</p>';
+        return;
+      }
+      if (pw.length < 4) {
+        msg.innerHTML = '<p class="msg-error">Le mot de passe doit contenir au moins 4 caractères.</p>';
+        return;
+      }
+
+      // Enregistrement local dans appData
+      appData.comptes_demo.push({ email, motdepasse: pw, prenom, nom });
+      currentUser = { prenom, nom, email, plan: 'Gratuit' };
+      msg.innerHTML = '<p class="msg-success">Compte créé ! Redirection...</p>';
+      setTimeout(() => navigate('bord'), 800);
+    });
+  }
+
+  if (page === 'bord') {
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        currentUser = null;
+        navigate('connexion');
+      });
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+//  INITIALISATION — chargement du JSON
+// ══════════════════════════════════════════════
+async function init() {
+  try {
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error('data.json introuvable');
+    appData = await res.json();
+  } catch(err) {
+    // Données de secours (si ouvert sans serveur)
+    console.warn('Chargement data.json échoué, utilisation des données de secours.', err);
+    appData = {
+      utilisateur: { prenom:"Moussa", nom:"Diallo", email:"moussa@kimcv.com", plan:"Gratuit" },
+      stats: { cv_crees:2, cv_gratuits:1, cv_pro:1, score_moyen:74, score_evolution:"+12 ce mois", lettres_generees:1, pdf_exportes:5 },
+      cv: [
+        { id:1, titre:"CV Développeur Web", template:"Corporate", plan:"pro", modifie:"Il y a 2 jours", score_ats:82, couleur_score:"good" },
+        { id:2, titre:"CV Chef de Projet",  template:"Moderne",   plan:"free", modifie:"Il y a 1 semaine", score_ats:65, couleur_score:"mid" }
+      ],
+      lettres: [{ id:1, titre:"Candidature Développeur", source:"Générée par IA", date:"3 jours" }],
+      activites: [
+        { id:1, texte:"CV Développeur Web modifié", date:"Il y a 2 jours", type:"edit" },
+        { id:2, texte:"PDF exporté avec succès", date:"Il y a 3 jours", type:"export" },
+        { id:3, texte:"Lettre générée par IA", date:"Il y a 3 jours", type:"ia" },
+        { id:4, texte:"CV Chef de Projet créé", date:"Il y a 1 semaine", type:"create" }
+      ],
+      comptes_demo: [
+        { email:"moussa@kimcv.com", motdepasse:"1234", prenom:"Moussa", nom:"Diallo" },
+        { email:"test@kimcv.com",   motdepasse:"test", prenom:"Marie", nom:"Dupont" }
+      ]
+    };
+  }
+  navigate('connexion');
+}
+
+init();
+</script>
+</body>
+</html>

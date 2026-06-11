@@ -1,0 +1,86 @@
+{
+  "utilisateur": {
+    "prenom": "Moussa",
+    "nom": "Diallo",
+    "initiales": "MD",
+    "email": "moussa.diallo@example.com",
+    "plan": "Gratuit"
+  },
+  "stats": {
+    "cv_crees": 2,
+    "cv_gratuits": 1,
+    "cv_pro": 1,
+    "score_moyen": 74,
+    "score_evolution": "+12 ce mois",
+    "lettres_generees": 1,
+    "pdf_exportes": 5
+  },
+  "cv": [
+    {
+      "id": 1,
+      "titre": "CV Développeur Web",
+      "template": "Corporate",
+      "plan": "pro",
+      "modifie": "Il y a 2 jours",
+      "score_ats": 82,
+      "couleur_score": "good"
+    },
+    {
+      "id": 2,
+      "titre": "CV Chef de Projet",
+      "template": "Moderne",
+      "plan": "free",
+      "modifie": "Il y a 1 semaine",
+      "score_ats": 65,
+      "couleur_score": "mid"
+    }
+  ],
+  "lettres": [
+    {
+      "id": 1,
+      "titre": "Candidature Développeur",
+      "source": "Générée par IA",
+      "date": "3 jours"
+    }
+  ],
+  "activites": [
+    {
+      "id": 1,
+      "texte": "CV Développeur Web modifié",
+      "date": "Il y a 2 jours",
+      "type": "edit"
+    },
+    {
+      "id": 2,
+      "texte": "PDF exporté avec succès",
+      "date": "Il y a 3 jours",
+      "type": "export"
+    },
+    {
+      "id": 3,
+      "texte": "Lettre générée par IA",
+      "date": "Il y a 3 jours",
+      "type": "ia"
+    },
+    {
+      "id": 4,
+      "texte": "CV Chef de Projet créé",
+      "date": "Il y a 1 semaine",
+      "type": "create"
+    }
+  ],
+  "comptes_demo": [
+    {
+      "email": "moussa@kimcv.com",
+      "motdepasse": "1234",
+      "prenom": "Moussa",
+      "nom": "Diallo"
+    },
+    {
+      "email": "test@kimcv.com",
+      "motdepasse": "test",
+      "prenom": "Marie",
+      "nom": "Dupont"
+    }
+  ]
+}
